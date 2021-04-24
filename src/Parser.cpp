@@ -14,6 +14,8 @@
 #include <sstream>
 using namespace std;
 
+Parser::Parser(){}
+
 Parser::Parser(string fileName)
 {
 	parse(fileName);
@@ -25,7 +27,8 @@ void Parser::parse(string fileName)
 	string l, c, val;
 	int cI;
 	ifstream myFile(fileName);
-	vector<vector<string>> result;
+	matrix result;
+	column temp = column {};
 
 	// Replace with call to Qt to show Message Box
 	// Or catch error and display
@@ -37,14 +40,17 @@ void Parser::parse(string fileName)
 		stringstream stream(l);
 		while(getline(stream, c, ';'))
 		{
-			result.push_back(vector<string> {c});
+			temp.push_back(c);
 		}
+		result.push_back(temp);
 	}
+
+	cI = 1; // Index de la colonne courante
 
 	while(getline(myFile, l))
 	{
 		stringstream stream(l);
-		cI = 0; // Index de la colonne courante
+		temp = column {};
 
 		while(stream >> val)
 		{
@@ -53,13 +59,11 @@ void Parser::parse(string fileName)
 			while ((pos = val.find(delimiter)) != string::npos)
 			{
 			    token = val.substr(0, pos);
-			    result[cI].push_back(token);
+			    temp.push_back(token);
 			    val.erase(0, pos + delimiter.length());
-			    cI++;
-			    cout << token << " ; ";
 			}
-			result[cI].push_back(val);
-			cout << endl;
+			temp.push_back(val);
+			result.push_back(temp);
 		}
 	}
 	data = result;
@@ -69,16 +73,15 @@ void Parser::parse(string fileName)
 
 void Parser::print()
 {
-	vector<vector<string>> vect = data;
-
+	matrix vect = data;
 	for (int i = 0; i < vect.size(); i++)
-	    {
-	        for (int j = 0; j < vect[i].size(); j++)
-	        {
-	            cout << vect[i][j] << " ; ";
-	        }
-	        cout << endl;
-	    }
+	{
+		for (int j = 0; j < vect[i].size(); j++)
+		{
+			cout << vect[i][j] << " ";
+		}
+		cout << endl;
+	}
 }
 
 void Parser::setFile(string fileName)
@@ -89,6 +92,11 @@ void Parser::setFile(string fileName)
 void Parser::setEncoding(string encoding)
 {
 	delimiter = encoding;
+}
+
+matrix Parser::getData()
+{
+	return data;
 }
 
 Parser::~Parser() {}

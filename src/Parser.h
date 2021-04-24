@@ -13,13 +13,14 @@
 #include <iostream>
 using namespace std;
 
-
+#define matrix vector<vector<string>>
+#define column vector<string>
 
 class Parser {
 
 public:
 	// Vecteur contenant les colonnes comme pair d'entete et vecteur contenant les valeurs
-	vector<vector<string>> data;
+	matrix data;
 	string delimiter = ";";
 	string file;
 
@@ -30,6 +31,7 @@ public:
 	void setFile(string fileName);
 	void print();
 	void setEncoding(string encoding);
+	matrix getData();
 
 	virtual ~Parser();
 };
