@@ -56,10 +56,8 @@ void Parser::parse(string fileName)
 			    result[cI].push_back(token);
 			    val.erase(0, pos + delimiter.length());
 			    cI++;
-			    cout << token << " ; ";
 			}
 			result[cI].push_back(val);
-			cout << endl;
 		}
 	}
 	data = result;
