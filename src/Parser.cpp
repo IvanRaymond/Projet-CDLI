@@ -14,6 +14,8 @@
 #include <sstream>
 using namespace std;
 
+Parser::Parser(){}
+
 Parser::Parser(string fileName)
 {
 	parse(fileName);
@@ -25,7 +27,7 @@ void Parser::parse(string fileName)
 	string l, c, val;
 	int cI;
 	ifstream myFile(fileName);
-	vector<vector<string>> result;
+	matrix result;
 
 	// Replace with call to Qt to show Message Box
 	// Or catch error and display
@@ -44,7 +46,7 @@ void Parser::parse(string fileName)
 	while(getline(myFile, l))
 	{
 		stringstream stream(l);
-		cI = 0; // Index de la colonne courante
+		cI = 0;
 
 		while(stream >> val)
 		{
@@ -52,12 +54,12 @@ void Parser::parse(string fileName)
 			string token;
 			while ((pos = val.find(delimiter)) != string::npos)
 			{
-			    token = val.substr(0, pos);
-			    result[cI].push_back(token);
-			    val.erase(0, pos + delimiter.length());
-			    cI++;
+				token = val.substr(0, pos);
+				result.at(cI).push_back(token);
+				val.erase(0, pos + delimiter.length());
+				cI++;
 			}
-			result[cI].push_back(val);
+			result.at(cI).push_back(val);
 		}
 	}
 	data = result;
@@ -67,16 +69,34 @@ void Parser::parse(string fileName)
 
 void Parser::print()
 {
-	vector<vector<string>> vect = data;
+	matrix vect = data;
+	int colSize = vect[0].size();
+	for (int i = 0; i < colSize; i++)
+	{
+		for (int j = 0; j < vect.size(); j++)
+		{
+			colSize = vect[j].size();
+			cout << "| " << vect[j][i] << " |";
+		}
 
-	for (int i = 0; i < vect.size(); i++)
-	    {
-	        for (int j = 0; j < vect[i].size(); j++)
-	        {
-	            cout << vect[i][j] << " ; ";
-	        }
-	        cout << endl;
-	    }
+		cout << endl;
+	}
+}
+
+void Parser::print(matrix X)
+{
+	matrix vect = X;
+	int colSize = vect[0].size();
+	for (int i = 0; i < colSize; i++)
+	{
+		for (int j = 0; j < vect.size(); j++)
+		{
+			colSize = vect[j].size();
+			cout << "| " << vect[j][i] << " |";
+		}
+
+		cout << endl;
+	}
 }
 
 void Parser::setFile(string fileName)
@@ -87,6 +107,11 @@ void Parser::setFile(string fileName)
 void Parser::setEncoding(string encoding)
 {
 	delimiter = encoding;
+}
+
+matrix Parser::getData()
+{
+	return data;
 }
 
 Parser::~Parser() {}
