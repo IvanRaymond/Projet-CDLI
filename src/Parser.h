@@ -30,6 +30,7 @@ public:
 	void parse(string fileName);
 	void setFile(string fileName);
 	void print();
+	void print(matrix data);
 	void setEncoding(string encoding);
 	matrix getData();
 

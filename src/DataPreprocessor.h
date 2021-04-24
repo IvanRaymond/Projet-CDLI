@@ -31,6 +31,10 @@ public:
 
 		void fit(matrix data);
 		matrix transform(matrix &data);
+
+	private:
+		matrix mean(matrix &data);
+		matrix median(matrix &data);
 	};
 
 	DataPreprocessor();
