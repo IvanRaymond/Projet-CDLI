@@ -83,7 +83,7 @@ void Parser::print()
 	}
 }
 
-void Parser::print(matrix X)
+void print(matrix X)
 {
 	matrix vect = X;
 	int colSize = vect[0].size();

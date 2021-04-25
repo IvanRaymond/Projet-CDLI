@@ -30,12 +30,13 @@ public:
 	void parse(string fileName);
 	void setFile(string fileName);
 	void print();
-	void print(matrix data);
 	void setEncoding(string encoding);
 	matrix getData();
 
 	virtual ~Parser();
 };
+
+void print(matrix data);
 
 #endif /* PARSER_H_ */
 

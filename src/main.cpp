@@ -20,7 +20,7 @@ int main()
 
 	data = imputer.transform(data);
 
-	parser.print(data);
+	print(data);
 
 	return 0;
 }
