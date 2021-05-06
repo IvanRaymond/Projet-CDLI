@@ -33,6 +33,7 @@ void Parser::parse(string fileName)
 	// Or catch error and display
 	if(!myFile.is_open()) throw runtime_error("Fichier introuvable");
 
+	// ToDo add comments
 	if(myFile.good())
 	{
 		getline(myFile, l);
