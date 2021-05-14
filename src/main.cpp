@@ -10,7 +10,10 @@ int main()
 //	cin >> filename;
 	Parser parser(filename);
 	cout << endl;
-	parser.print();
+//	parser.print();
+
+	Mean mean;
+	Median median;
 
 	DataPreprocessor::SimpleImputer imputer(mean);
 
