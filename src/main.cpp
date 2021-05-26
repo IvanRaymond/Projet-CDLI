@@ -1,6 +1,8 @@
 #include <iostream>
+#include <string>
 #include "Parser.h"
 #include "DataPreprocessor.h"
+#include "Operation.h"
 
 using namespace std;
 
@@ -15,7 +17,7 @@ int main()
 	Mean mean;
 	Median median;
 
-	DataPreprocessor::SimpleImputer imputer(mean);
+	DataPreprocessor::SimpleImputer imputer(median);
 
 	matrix data = parser.getData();
 
@@ -23,7 +25,18 @@ int main()
 
 	data = imputer.transform(data);
 
+	column col;
+
+	col = data.at(0);
+
+	CalculateSum sum;
+	matrix X;
+
+	X.push_back(col);
+
 	print(data);
+
+	cout << sum.calculate(X);
 
 	return 0;
 }
