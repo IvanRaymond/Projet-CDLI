@@ -40,6 +40,7 @@ class Median : public ImputerStrategy {
 		virtual matrix transform(matrix& X);
 };
 
+float getMedian(matrix X, int i, int start = 1);
 bool isFloat(string myString);
 
 #endif /* SRC_IMPUTERSTRATEGY_H_ */

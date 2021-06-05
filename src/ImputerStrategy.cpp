@@ -116,6 +116,33 @@ matrix Median::transform(matrix &X) {
 	return X;
 }
 
+/*
+ * Takes a matrix and the index of the column
+ * Return median or -1 if non numerical
+ */
+float getMedian(matrix X, int i, int start){
+	bool nan;	// not a number
+	float median = -1;
+
+	nan = false;
+	for(int j = start; j < X[i].size(); j++) {	// Checks if column is numerical
+		string current = X.at(i).at(j);
+		if(!isFloat(current) && current != "") nan = true;
+	}
+	if(!nan) {		// Case numerical
+		vector<float> temp;
+		for(int k = start; k < X[i].size(); k++) {
+			// Creates a float vector containing all numerical values of the column
+			// Sort doesn't work on strings so conversion is needed
+			if(isFloat(X[i][k])) temp.push_back(stof(X[i][k]));
+		}
+		sort(temp.begin(),temp.end());
+		median = temp.at(temp.size()/2);	//Median is at the middle of the list
+	}
+	return median;
+}
+
+
 bool isFloat(string myString) {
     std::istringstream iss(myString);
     float f;
