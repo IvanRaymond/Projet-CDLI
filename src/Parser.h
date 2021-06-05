@@ -28,6 +28,7 @@ public:
 	Parser(string fileName);
 
 	void parse(string fileName);
+	void save(matrix X);
 	void setFile(string fileName);
 	void print();
 	void setEncoding(string encoding);

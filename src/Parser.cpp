@@ -24,6 +24,8 @@ Parser::Parser(string fileName)
 
 void Parser::parse(string fileName)
 {
+	file = fileName;
+
 	string l, c, val;
 	int cI;
 	ifstream myFile(fileName);
@@ -66,6 +68,35 @@ void Parser::parse(string fileName)
 	data = result;
 
 	myFile.close();
+}
+
+void Parser::save(matrix X)
+{
+	ofstream myfile;
+	myfile.open (file, ios::out | ios::trunc);
+
+	cout << file << endl;
+
+	if (myfile.is_open()) {
+
+		matrix vect = X;
+		int colSize = vect[0].size();
+		for (int i = 0; i < colSize; i++)
+		{
+			for (int j = 0; j < vect.size(); j++)
+			{
+				colSize = vect[j].size();
+				myfile << vect[j][i];
+				if (j < vect.size() - 1) {
+					myfile << delimiter;
+				}
+			}
+
+			myfile << "\n";
+		}
+		myfile.close();
+	}
+	else cout << "Couldn't save to file";
 }
 
 void Parser::print()

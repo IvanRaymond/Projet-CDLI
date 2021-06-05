@@ -25,5 +25,7 @@ int main()
 
 	print(data);
 
+	parser.save(data);
+
 	return 0;
 }
