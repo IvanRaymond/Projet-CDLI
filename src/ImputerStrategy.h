@@ -27,21 +27,19 @@ class Mean : public ImputerStrategy {
 	public:
 		matrix data;
 		Mean();
-		Mean(matrix &X);
+		Mean(matrix X);
 		virtual ~Mean();
 		virtual matrix transform(matrix& X);
 };
 
 class Median : public ImputerStrategy {
 	public:
-		matrix data;
 		Median();
 		Median(matrix &X);
 		virtual ~Median();
 		virtual matrix transform(matrix& X);
 };
 
-float getMedian(matrix X, int i, int start = 1);
 bool isFloat(string myString);
 
 #endif /* SRC_IMPUTERSTRATEGY_H_ */
