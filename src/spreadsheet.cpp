@@ -499,9 +499,9 @@ void SpreadSheet::actionMath_helper(const QString &title, const QString &op)
     
     if (addDialog.exec()) {
         CalculateSum sum;
-        convertRange(fromStdString("a"));
+        
         //matrix convertedRange = convertRange(cell1ColInput.currentText().toUtf8().constData());
-        //matrix convertedRange = convertRange(cell1ColInput.currentText().toUtf8().constData());
+        matrix convertedRange = convertRange(cell1ColInput);
         //sum.calculate(convertedRange);
         QMessageBox msgBox;
         //std::string str(vec.begin(), vec.end());
