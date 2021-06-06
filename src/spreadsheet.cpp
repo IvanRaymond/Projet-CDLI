@@ -180,7 +180,7 @@ void SpreadSheet::setupMenuBar()
     cellMenu->addAction(cell_subAction);
     cellMenu->addAction(cell_mulAction);
     cellMenu->addAction(cell_divAction);
-    cellMenu->addAction(cell_sumAction);
+//    cellMenu->addAction(cell_sumAction);
     cellMenu->addSeparator();
     cellMenu->addAction(colorAction);
     cellMenu->addAction(fontAction);
