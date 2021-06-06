@@ -8,7 +8,7 @@
 using namespace std;
 
 #define matrix vector<vector<string>>
-#define column vector<string>
+#define dataColumn vector<string>
 
 //Interface ImputerStrategy
 class ImputerStrategy {
