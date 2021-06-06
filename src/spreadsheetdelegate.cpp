@@ -60,12 +60,6 @@ QWidget *SpreadSheetDelegate::createEditor(QWidget *parent,
                                            const QStyleOptionViewItem &,
                                            const QModelIndex &index) const
 {
-    if (index.column() == 1) {
-        QDateTimeEdit *editor = new QDateTimeEdit(parent);
-        editor->setDisplayFormat("dd/M/yyyy");
-        editor->setCalendarPopup(true);
-        return editor;
-    }
 
     QLineEdit *editor = new QLineEdit(parent);
 
