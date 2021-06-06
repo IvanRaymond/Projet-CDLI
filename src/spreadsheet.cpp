@@ -509,10 +509,7 @@ void SpreadSheet::actionMath_helper2(const QString &title, Operation &operation)
         CalculateSum sum;
         QString result;
         QMessageBox msgBox;
-
         matrix convertedRange = convertRange(cell1ColInput.currentText());
-
-
         msgBox.setText(executeOperation(convertedRange, operation));
         msgBox.exec();
 
@@ -629,11 +626,20 @@ void SpreadSheet::showAbout()
 
 
     if (addDialog.exec()) {
+        vector<vector<string>> data;
+        data = convertTable(table);
         ImputerMedian median;
         DataPreprocessor::SimpleImputer imputer(median);
-        /*QMessageBox msgBox;
-        msgBox.setText("lk");
-        msgBox.exec();*/
+        for (int i = 0; i < data.size(); ++i)
+            for (int j = 0; j < data[0].size(); ++j) {
+                table->setItem(j, i, new SpreadSheetItem(data[i][j]));
+            }
+        QMessageBox msgBox;
+        if(radio1.isChecked())
+            msgBox.setText("Yer a Wizard, Harry!");
+        else
+            msgBox.setText("Yer a Wizard, Trouduc!");
+        msgBox.exec();
     }
 }
 
