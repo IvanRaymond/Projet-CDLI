@@ -694,6 +694,9 @@ vector<vector<string>> getRow(vector<vector<string>> data, int row)
         }
         result.push_back(col);
     }
+    else {
+
+    }
     return result;
 }
 
