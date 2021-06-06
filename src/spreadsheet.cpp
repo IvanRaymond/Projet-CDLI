@@ -761,7 +761,6 @@ vector<vector<string>> convertTable(QTableWidget *table, int start)
  */
 vector<vector<string>> getRow(vector<vector<string>> data, int row)
 {
-    row += 2;
     vector<vector<string>> result;
     vector<string> col, temp;
     temp = data[0];
