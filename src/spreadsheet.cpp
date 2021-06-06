@@ -852,7 +852,7 @@ void SpreadSheet::save()
                     textData += ";";    // for .csv file format
                 }
             }
-            textData += "\n";             // (optional: for new line segmentation)
+            textData += "\n";             // new line segmentation
         }
         out << textData;
     }
