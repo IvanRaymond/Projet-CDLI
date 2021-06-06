@@ -710,7 +710,7 @@ vector<vector<string>> convertQVect(QVector<QVector<QString>> data)
 
 parser myParser;
 
-vector<vector<string>> convertTable(QTableWidget *table)
+vector<vector<string>> convertTable(QTableWidget *table, int start)
 {
     vector<vector<string>> result;
     vector<string> col;
@@ -720,7 +720,7 @@ vector<vector<string>> convertTable(QTableWidget *table)
 
     for (int i = 0; i < columns; i++) {
         col.clear();
-        for (int j = 1; j < rows; j++) {
+        for (int j = start; j < rows; j++) {
              col.push_back(table->item(j,i)->text().toStdString());
         }
         result.push_back(col);
@@ -740,9 +740,6 @@ vector<vector<string>> getRow(vector<vector<string>> data, int row)
             col.push_back(data[i][row]);
         }
         result.push_back(col);
-    }
-    else {
-
     }
     return result;
 }
