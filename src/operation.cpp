@@ -95,21 +95,20 @@ string CalculateMax::calculate(matrix X){
 
     dataColumn col;
     vector<double> colInt;
-    double newMax, max;
+    double max;
     // Initialising max as minimum value possible
     max = -std::numeric_limits<double>::max();
 
-    for(string elem:col){
-        colInt.push_back(stod(elem));
+    // Add all numerical values to an array
+    for(vector<string> elemVect:X){
+        for(string elem:elemVect){
+            if(isFloat(elem))
+                colInt.push_back(stod(elem));
+        }
     }
+    // Function to get max element of numerical vector
+    max = *max_element(colInt.begin(), colInt.end());
 
-    // max_element function to find max for the column
-    // If greater than max then update max
-    for (int i = 0; i < X.size(); i++){
-        col = X.at(i);
-        newMax = *max_element(colInt.begin(), colInt.end());
-        max = (newMax > max) ? newMax : max;
-    }
     return to_string(max);
 }
 
