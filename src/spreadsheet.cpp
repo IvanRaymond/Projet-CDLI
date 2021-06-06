@@ -58,6 +58,7 @@
 #include <QtPrintSupport>
 #include <QFile>
 #include <QTextStream>
+#include <QDebug>
 #endif
 
 SpreadSheet::SpreadSheet(int rows, int cols, QWidget *parent)
@@ -499,18 +500,15 @@ void SpreadSheet::actionMath_helper(const QString &title, const QString &op)
     
     if (addDialog.exec()) {
         CalculateSum sum;
-        
-        //matrix convertedRange = convertRange(cell1ColInput.currentText().toUtf8().constData());
-        matrix convertedRange = convertRange(cell1ColInput);
-        //sum.calculate(convertedRange);
+        QString result;
         QMessageBox msgBox;
-        //std::string str(vec.begin(), vec.end());
-        msgBox.setText(cell1ColInput.currentText());
+
+        matrix convertedRange = convertRange(cell1ColInput.currentText());
+        result = QString::fromStdString(sum.calculate(convertedRange));
+
+        msgBox.setText(result);
         msgBox.exec();
-        //int resultSum = dataOperation.calculateSum(convertedRange);
-        /**cell1 = cell1ColInput.currentText() + cell1RowInput.currentText();
-        *cell2 = cell2ColInput.currentText() + cell2RowInput.currentText();
-        *outCell = outColInput.currentText() + outRowInput.currentText();*/
+
     }
 }
 
@@ -654,7 +652,7 @@ vector<vector<string>> convertQVect(QVector<QVector<QString>> data)
 
 parser myParser;
 
-vector<vector<string>> SpreadSheet::convertTable()
+vector<vector<string>> convertTable(QTableWidget *table)
 {
     vector<vector<string>> result;
     vector<string> col;
@@ -663,8 +661,9 @@ vector<vector<string>> SpreadSheet::convertTable()
     int columns = myParser.getColumnCount();
 
     for (int i = 0; i < columns; i++) {
-        for (int j = 0; j < rows; j++) {
-             col.push_back(table->item(i,j)->text().toStdString());
+        col.clear();
+        for (int j = 1; j < rows; j++) {
+             col.push_back(table->item(j,i)->text().toStdString());
         }
         result.push_back(col);
     }
@@ -674,14 +673,16 @@ vector<vector<string>> SpreadSheet::convertTable()
 vector<vector<string>> getRow(vector<vector<string>> data, int row)
 {
     vector<vector<string>> result;
-    vector<string> col;
+    vector<string> col, temp;
+    temp = data[0];
 
-    for(int i = 0; i < data.size(); i++)
-    {
-        col.push_back(data[i][row]);
+    if (row < temp.size()){
+        for(int i = 0; i < data.size(); i++)
+        {
+            col.push_back(data[i][row]);
+        }
+        result.push_back(col);
     }
-    result.push_back(col);
-
     return result;
 }
 
@@ -689,15 +690,19 @@ vector<vector<string>> getColumn(vector<vector<string>> data, int col)
 {
     vector<vector<string>> result;
 
-    result.push_back(data[col]);
+    if (col < data.size()) {
+        result.push_back(data[col]);
+    }
 
     return result;
 }
 
 vector<vector<string>> SpreadSheet::convertRange(QString range)
 {
+    QMessageBox msgBox;
+
     vector<vector<string>> data, result;
-    data = this->convertTable();
+    data = convertTable(table);
     bool ok;
     range.toInt(&ok);   //Ok set to True if range is numerical
 
