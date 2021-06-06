@@ -110,22 +110,22 @@ SpreadSheet::SpreadSheet(int rows, int cols, QWidget *parent)
 
 void SpreadSheet::createActions()
 {
-    cell_sumAction = new QAction(tr("Sum"), this);
+    cell_sumAction = new QAction(tr("Le dernier bouton ou on veut faire des trucs"), this);
     connect(cell_sumAction, &QAction::triggered, this, &SpreadSheet::actionSum);
 
-    cell_addAction = new QAction(tr("&Add"), this);
+    cell_addAction = new QAction(tr("&Sum"), this);
     cell_addAction->setShortcut(Qt::CTRL | Qt::Key_Plus);
     connect(cell_addAction, &QAction::triggered, this, &SpreadSheet::actionAdd);
 
-    cell_subAction = new QAction(tr("&Subtract"), this);
+    cell_subAction = new QAction(tr("&Max"), this);
     cell_subAction->setShortcut(Qt::CTRL | Qt::Key_Minus);
     connect(cell_subAction, &QAction::triggered, this, &SpreadSheet::actionSubtract);
 
-    cell_mulAction = new QAction(tr("&Multiply"), this);
+    cell_mulAction = new QAction(tr("&Average"), this);
     cell_mulAction->setShortcut(Qt::CTRL | Qt::Key_multiply);
     connect(cell_mulAction, &QAction::triggered, this, &SpreadSheet::actionMultiply);
 
-    cell_divAction = new QAction(tr("&Divide"), this);
+    cell_divAction = new QAction(tr("&Median"), this);
     cell_divAction->setShortcut(Qt::CTRL | Qt::Key_division);
     connect(cell_divAction, &QAction::triggered, this, &SpreadSheet::actionDivide);
 
@@ -442,7 +442,7 @@ QString executeOperation(matrix range, Operation &operation)
     return result;
 }
 
-void SpreadSheet::actionMath_helper2(const QString, Operation &operation)
+void SpreadSheet::actionMath_helper2(const QString &title, Operation &operation)
 {
     const QTableWidgetItem *current = table->currentItem();
     QStringList rows, cols;
@@ -467,7 +467,7 @@ void SpreadSheet::actionMath_helper2(const QString, Operation &operation)
     QRadioButton radio1 (tr("&Rows"),&group);
     QRadioButton radio2 (tr("&Columns"),&group);
 
-    //radio1->setChecked(true);
+    radio2.setChecked(true);
 
     QPushButton cancelButton(tr("Cancel"), &addDialog);
     connect(&cancelButton, &QAbstractButton::clicked, &addDialog, &QDialog::reject);
@@ -527,16 +527,19 @@ void SpreadSheet::actionAdd()
 
 void SpreadSheet::actionSubtract()
 {
-    //actionMath_helper(tr("Subtraction"), "-");
+    CalculateMax res;
+    actionMath_helper2(tr("Max"), res);
 }
 
 void SpreadSheet::actionMultiply()
 {
-    //actionMath_helper(tr("Multiplication"), "*");
+    CalculateAverage res;
+    actionMath_helper2(tr("Average"), res);
 }
 void SpreadSheet::actionDivide()
 {
-    //actionMath_helper(tr("Division"), "/");
+    CalculateMedian res;
+    actionMath_helper2(tr("Median"), res);
 }
 
 void SpreadSheet::clear()
