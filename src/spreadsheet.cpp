@@ -48,6 +48,11 @@
 **
 ****************************************************************************/
 
+/*
+ * Qt Interface
+ * Modified by Eren Riviere & Ivan Raymond
+ */
+
 #include "spreadsheet.h"
 #include "spreadsheetdelegate.h"
 #include "spreadsheetitem.h"
@@ -569,6 +574,9 @@ void SpreadSheet::setupContents()
 
 }
 
+/*
+ * Data Preprocessing menu
+ */
 void SpreadSheet::showAbout()
 {
     QDialog addDialog(this);
@@ -654,7 +662,9 @@ QString encode_pos(int row, int col)
     return QString(ch) + QString::number(row + 1);
 }
 
-
+/*
+ * Print the spreadsheet
+ */
 void SpreadSheet::print()
 {
 #if defined(QT_PRINTSUPPORT_LIB) && QT_CONFIG(printpreviewdialog)
@@ -667,6 +677,9 @@ void SpreadSheet::print()
 #endif
 }
 
+/*
+ * Convert a 2D Vector into a 2D QVector
+ */
 QVector<QVector<QString>> convertStdVect(vector<vector<string>> data)
 {
     vector<string> col;
@@ -687,6 +700,9 @@ QVector<QVector<QString>> convertStdVect(vector<vector<string>> data)
     return result;
 }
 
+/*
+ * Convert a 2D QVector into a 2D Vector
+ */
 vector<vector<string>> convertQVect(QVector<QVector<QString>> data)
 {
     vector<string> col;
@@ -710,6 +726,9 @@ vector<vector<string>> convertQVect(QVector<QVector<QString>> data)
 
 parser myParser;
 
+/*
+ * Convert a QWidgetTable into a 2D Vector
+ */
 vector<vector<string>> convertTable(QTableWidget *table, int start)
 {
     vector<vector<string>> result;
@@ -728,6 +747,9 @@ vector<vector<string>> convertTable(QTableWidget *table, int start)
     return result;
 }
 
+/*
+ * Get a row at index row
+ */
 vector<vector<string>> getRow(vector<vector<string>> data, int row)
 {
     row -= 2;
@@ -735,7 +757,9 @@ vector<vector<string>> getRow(vector<vector<string>> data, int row)
     vector<string> col, temp;
     temp = data[0];
 
+    // Check if row index is greater than the number of rows
     if (row < temp.size()){
+         // Add each element of the row to a new 2D Vector
         for(int i = 0; i < data.size(); i++)
         {
             col.push_back(data[i][row]);
@@ -745,6 +769,9 @@ vector<vector<string>> getRow(vector<vector<string>> data, int row)
     return result;
 }
 
+/*
+ * Get the column at the index col
+ */
 vector<vector<string>> getColumn(vector<vector<string>> data, int col)
 {
     vector<vector<string>> result;
@@ -756,6 +783,10 @@ vector<vector<string>> getColumn(vector<vector<string>> data, int col)
     return result;
 }
 
+/*
+ * Fetch data from either a column or row
+ * If range is numerical then a row is returned else a column is returned
+ */
 vector<vector<string>> SpreadSheet::convertRange(QString range)
 {
     QMessageBox msgBox;
@@ -782,6 +813,9 @@ vector<vector<string>> SpreadSheet::convertRange(QString range)
     return result;
 }
 
+/*
+ * Open a CSV file
+ */
 void SpreadSheet::open()
 {
     QString fileName = QFileDialog::getOpenFileName(this,
@@ -790,8 +824,12 @@ void SpreadSheet::open()
 
     myParser.parse(fileName.toStdString());
 
+    // Convert vector into QVector
     QVector<QVector<QString>> data = convertStdVect(myParser.getData());
 
+    table->clear();
+
+    // Fill the spreadsheet
     for (int i = 0; i < data.size(); ++i)
         for (int j = 0; j < data[0].size(); ++j) {
             table->setItem(j, i, new SpreadSheetItem(data[i][j]));
@@ -799,10 +837,12 @@ void SpreadSheet::open()
     return;
 }
 
-// Convert QTable into a matrix and use save method
+/*
+ * Save the spreadsheet into a CSV file
+ */
 void SpreadSheet::save()
 {
-
+     // file dialog box
     QString fileName = QFileDialog::getSaveFileName(this,
         tr("Save CSV"), "",
         tr("CSV (*.csv);;All Files (*)"));
@@ -820,9 +860,11 @@ void SpreadSheet::save()
         QTextStream out(&file);
         QString textData;
 
+        // Get the count of rows and columns in the dataset
         int rows = myParser.getRowCount();
         int columns = myParser.getColumnCount();
 
+        // Reverse parsing to save to file
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < columns; j++) {
 
