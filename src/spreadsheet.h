@@ -100,6 +100,7 @@ protected:
     void createActions();
 
     void actionMath_helper(const QString &title, const QString &op);
+    void actionMath_helper2(const QString &title, Operation &operation);
     bool runInputDialog(const QString &title,
                         const QString &c1Text,
                         const QString &c2Text,
