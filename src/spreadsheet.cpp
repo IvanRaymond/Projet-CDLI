@@ -442,8 +442,7 @@ QString executeOperation(matrix range, Operation &operation)
     return result;
 }
 
-
-void SpreadSheet::actionMath_helper(const QString &title, const QString &op)
+void SpreadSheet::actionMath_helper2(const QString, Operation &operation)
 {
     const QTableWidgetItem *current = table->currentItem();
     QStringList rows, cols;
@@ -514,7 +513,7 @@ void SpreadSheet::actionMath_helper(const QString &title, const QString &op)
         matrix convertedRange = convertRange(cell1ColInput.currentText());
 
 
-        msgBox.setText(executeOperation(convertedRange, sum));
+        msgBox.setText(executeOperation(convertedRange, operation));
         msgBox.exec();
 
     }
@@ -522,21 +521,22 @@ void SpreadSheet::actionMath_helper(const QString &title, const QString &op)
 
 void SpreadSheet::actionAdd()
 {
-    actionMath_helper(tr("Addition"), "+");
+    CalculateSum res;
+    actionMath_helper2(tr("Addition"), res);
 }
 
 void SpreadSheet::actionSubtract()
 {
-    actionMath_helper(tr("Subtraction"), "-");
+    //actionMath_helper(tr("Subtraction"), "-");
 }
 
 void SpreadSheet::actionMultiply()
 {
-    actionMath_helper(tr("Multiplication"), "*");
+    //actionMath_helper(tr("Multiplication"), "*");
 }
 void SpreadSheet::actionDivide()
 {
-    actionMath_helper(tr("Division"), "/");
+    //actionMath_helper(tr("Division"), "/");
 }
 
 void SpreadSheet::clear()
