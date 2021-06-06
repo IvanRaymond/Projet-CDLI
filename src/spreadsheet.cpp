@@ -436,19 +436,81 @@ void SpreadSheet::actionSum()
 
 void SpreadSheet::actionMath_helper(const QString &title, const QString &op)
 {
-    QString cell1 = "C1";
-    QString cell2 = "C2";
-    QString out = "C3";
-
     const QTableWidgetItem *current = table->currentItem();
-    if (current)
-        out = encode_pos(table->currentRow(), table->currentColumn());
+    QStringList rows, cols;
+    for (int c = 0; c < table->columnCount(); ++c)
+        cols << QChar('A' + c);
+    for (int r = 0; r < table->rowCount(); ++r)
+        rows << QString::number(1 + r);
 
-    if (runInputDialog(title, tr("Cell 1"), tr("Cell 2"), op, tr("Output to:"),
-                       &cell1, &cell2, &out)) {
-        int row, col;
-        decode_pos(out, &row, &col);
-        table->item(row, col)->setText(tr("%1 %2 %3").arg(op, cell1, cell2));
+    QDialog addDialog(this);
+    addDialog.setWindowTitle(title);
+
+    QGroupBox group(title, &addDialog);
+    group.setMinimumSize(250, 100);
+    
+    QComboBox cell1RowInput(&group);
+    cell1RowInput.addItems(rows);
+
+    QComboBox cell1ColInput(&group);
+    cell1ColInput.addItems(cols);
+
+    QLabel radio1label("Act on", &group);
+    QRadioButton radio1 (tr("&Rows"),&group);
+    QRadioButton radio2 (tr("&Columns"),&group);
+
+    //radio1->setChecked(true);
+
+    QPushButton cancelButton(tr("Cancel"), &addDialog);
+    connect(&cancelButton, &QAbstractButton::clicked, &addDialog, &QDialog::reject);
+
+    QPushButton okButton(tr("OK"), &addDialog);
+    okButton.setDefault(true);
+    connect(&okButton, &QAbstractButton::clicked, &addDialog, &QDialog::accept);
+
+    QHBoxLayout *buttonsLayout = new QHBoxLayout;
+    buttonsLayout->addStretch(1);
+    buttonsLayout->addWidget(&okButton);
+    buttonsLayout->addSpacing(10);
+    buttonsLayout->addWidget(&cancelButton);
+
+    QVBoxLayout *dialogLayout = new QVBoxLayout(&addDialog);
+    dialogLayout->addWidget(&group);
+    dialogLayout->addStretch(1);
+    dialogLayout->addItem(buttonsLayout);
+
+    QHBoxLayout *cell1Layout = new QHBoxLayout;
+    cell1Layout->addSpacing(10);
+    cell1Layout->addWidget(&cell1ColInput);
+    cell1Layout->addSpacing(10);
+    cell1Layout->addWidget(&cell1RowInput);
+
+    QHBoxLayout *radio1Layout = new QHBoxLayout;
+    radio1Layout->addWidget(&radio1label);
+    radio1Layout->addSpacing(10);
+    radio1Layout->addWidget(&radio1);
+    radio1Layout->addSpacing(10);
+    radio1Layout->addWidget(&radio2);
+    
+    QVBoxLayout *vLayout = new QVBoxLayout(&group);
+    vLayout->addItem(cell1Layout);
+    vLayout->addItem(radio1Layout);
+    vLayout->addStretch(1);
+    
+    if (addDialog.exec()) {
+        CalculateSum sum;
+        convertRange(fromStdString("a"));
+        //matrix convertedRange = convertRange(cell1ColInput.currentText().toUtf8().constData());
+        //matrix convertedRange = convertRange(cell1ColInput.currentText().toUtf8().constData());
+        //sum.calculate(convertedRange);
+        QMessageBox msgBox;
+        //std::string str(vec.begin(), vec.end());
+        msgBox.setText(cell1ColInput.currentText());
+        msgBox.exec();
+        //int resultSum = dataOperation.calculateSum(convertedRange);
+        /**cell1 = cell1ColInput.currentText() + cell1RowInput.currentText();
+        *cell2 = cell2ColInput.currentText() + cell2RowInput.currentText();
+        *outCell = outColInput.currentText() + outRowInput.currentText();*/
     }
 }
 
