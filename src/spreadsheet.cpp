@@ -48,11 +48,6 @@
 **
 ****************************************************************************/
 
-/*
- * Qt Interface
- * Modified by Eren Riviere & Ivan Raymond
- */
-
 #include "spreadsheet.h"
 #include "spreadsheetdelegate.h"
 #include "spreadsheetitem.h"
@@ -472,7 +467,7 @@ void SpreadSheet::actionMath_helper2(const QString &title, Operation &operation)
     QRadioButton radio1 (tr("&Columns"),&group);
     QRadioButton radio2 (tr("&Rows"),&group);
 
-    radio2.setChecked(true);
+    radio1.setChecked(true);
 
     QPushButton cancelButton(tr("Cancel"), &addDialog);
     connect(&cancelButton, &QAbstractButton::clicked, &addDialog, &QDialog::reject);
@@ -514,7 +509,11 @@ void SpreadSheet::actionMath_helper2(const QString &title, Operation &operation)
         CalculateSum sum;
         QString result;
         QMessageBox msgBox;
-        matrix convertedRange = convertRange(cell1ColInput.currentText());
+        matrix convertedRange;
+        if(radio1.isChecked())
+            convertedRange = convertRange(cell1ColInput.currentText());
+        else
+            convertedRange = convertRange(cell1RowInput.currentText());
         msgBox.setText(executeOperation(convertedRange, operation));
         msgBox.exec();
 
@@ -586,9 +585,6 @@ const char *htmlText =
 "<li>Summing the contents of an arbitrary number of cells.</li>"
 "</HTML>";
 
-/*
- * Data Preprocessing menu
- */
 void SpreadSheet::showAbout()
 {
     QDialog addDialog(this);
@@ -598,10 +594,10 @@ void SpreadSheet::showAbout()
     group.setMinimumSize(250, 100);
 
     QLabel radio1label("Choose your magic spell", &group);
-    QRadioButton radio1 (tr("&Median"),&group);
-    QRadioButton radio2 (tr("M&ean"),&group);
+    QRadioButton radio3 (tr("&Median"),&group);
+    QRadioButton radio4 (tr("M&ean"),&group);
 
-    radio1.setChecked(true);
+    radio3.setChecked(true);
    
     QPushButton cancelButton(tr("Cancel"), &addDialog);
     connect(&cancelButton, &QAbstractButton::clicked, &addDialog, &QDialog::reject);
@@ -621,35 +617,38 @@ void SpreadSheet::showAbout()
     dialogLayout->addStretch(1);
     dialogLayout->addItem(buttonsLayout);
 
-    QHBoxLayout *radio1Layout = new QHBoxLayout;
-    radio1Layout->addWidget(&radio1label);
-    radio1Layout->addSpacing(10);
-    radio1Layout->addWidget(&radio1);
-    radio1Layout->addSpacing(10);
-    radio1Layout->addWidget(&radio2);
+    QHBoxLayout *radio2Layout = new QHBoxLayout;
+    radio2Layout->addWidget(&radio1label);
+    radio2Layout->addSpacing(10);
+    radio2Layout->addWidget(&radio3);
+    radio2Layout->addSpacing(10);
+    radio2Layout->addWidget(&radio4);
     
     QVBoxLayout *vLayout = new QVBoxLayout(&group);
-    vLayout->addItem(radio1Layout);
+    vLayout->addItem(radio2Layout);
     vLayout->addStretch(1);
 
 
     if (addDialog.exec()) {
         vector<vector<string>> data;
         data = convertTable(table, 0);
-        ImputerMedian median;
-        DataPreprocessor::SimpleImputer imputer(median);
-        data = imputer.transform(data);
+        if(radio3.isChecked())
+        {
+            ImputerMedian method;
+            DataPreprocessor::SimpleImputer imputer(method);
+            data = imputer.transform(data);
+        }else{
+            ImputerMean method;
+            DataPreprocessor::SimpleImputer imputer(method);
+            data = imputer.transform(data);
+        }
         QVector<QVector<QString>> qData = convertStdVect(data);
-
         for (int i = 0; i < data.size(); ++i)
             for (int j = 0; j < data[0].size(); ++j) {
                 table->setItem(j, i, new SpreadSheetItem(qData[i][j]));
             }
         QMessageBox msgBox;
-        if(radio1.isChecked())
-            msgBox.setText("Yer a Wizard, Harry!");
-        else
-            msgBox.setText("Yer a Wizard, Trouduc!");
+        msgBox.setText("Yer a Wizard, Harry!");
         msgBox.exec();
     }
 }
@@ -671,9 +670,7 @@ QString encode_pos(int row, int col)
     return QString(ch) + QString::number(row + 1);
 }
 
-/*
- * Print the spreadsheet
- */
+
 void SpreadSheet::print()
 {
 #if defined(QT_PRINTSUPPORT_LIB) && QT_CONFIG(printpreviewdialog)
@@ -686,9 +683,6 @@ void SpreadSheet::print()
 #endif
 }
 
-/*
- * Convert a 2D Vector into a 2D QVector
- */
 QVector<QVector<QString>> convertStdVect(vector<vector<string>> data)
 {
     vector<string> col;
@@ -709,9 +703,6 @@ QVector<QVector<QString>> convertStdVect(vector<vector<string>> data)
     return result;
 }
 
-/*
- * Convert a 2D QVector into a 2D Vector
- */
 vector<vector<string>> convertQVect(QVector<QVector<QString>> data)
 {
     vector<string> col;
@@ -735,9 +726,6 @@ vector<vector<string>> convertQVect(QVector<QVector<QString>> data)
 
 parser myParser;
 
-/*
- * Convert a QWidgetTable into a 2D Vector
- */
 vector<vector<string>> convertTable(QTableWidget *table, int start)
 {
     vector<vector<string>> result;
@@ -756,18 +744,14 @@ vector<vector<string>> convertTable(QTableWidget *table, int start)
     return result;
 }
 
-/*
- * Get a row at index row
- */
 vector<vector<string>> getRow(vector<vector<string>> data, int row)
 {
-    row += 2;
+    row += 1;
     vector<vector<string>> result;
     vector<string> col, temp;
     temp = data[0];
-    // Check if row index is greater than the number of rows
+
     if (row < temp.size()){
-        // Add each element of the row to a new 2D Vector
         for(int i = 0; i < data.size(); i++)
         {
             col.push_back(data[i][row]);
@@ -777,9 +761,6 @@ vector<vector<string>> getRow(vector<vector<string>> data, int row)
     return result;
 }
 
-/*
- * Get the column at the index col
- */
 vector<vector<string>> getColumn(vector<vector<string>> data, int col)
 {
     vector<vector<string>> result;
@@ -787,13 +768,10 @@ vector<vector<string>> getColumn(vector<vector<string>> data, int col)
     if (col < data.size()) {
         result.push_back(data[col]);
     }
+
     return result;
 }
 
-/*
- * Fetch data from either a column or row
- * If range is numerical then a row is returned else a column is returned
- */
 vector<vector<string>> SpreadSheet::convertRange(QString range)
 {
     QMessageBox msgBox;
@@ -820,9 +798,6 @@ vector<vector<string>> SpreadSheet::convertRange(QString range)
     return result;
 }
 
-/*
- * Open a CSV file
- */
 void SpreadSheet::open()
 {
     QString fileName = QFileDialog::getOpenFileName(this,
@@ -831,10 +806,8 @@ void SpreadSheet::open()
 
     myParser.parse(fileName.toStdString());
 
-    // Convert vector into QVector
     QVector<QVector<QString>> data = convertStdVect(myParser.getData());
 
-    // Fill the spreadsheet
     for (int i = 0; i < data.size(); ++i)
         for (int j = 0; j < data[0].size(); ++j) {
             table->setItem(j, i, new SpreadSheetItem(data[i][j]));
@@ -842,12 +815,10 @@ void SpreadSheet::open()
     return;
 }
 
-/*
- * Save the spreadsheet into a CSV file
- */
+// Convert QTable into a matrix and use save method
 void SpreadSheet::save()
 {
-    // file dialog box
+
     QString fileName = QFileDialog::getSaveFileName(this,
         tr("Save CSV"), "",
         tr("CSV (*.csv);;All Files (*)"));
@@ -865,11 +836,9 @@ void SpreadSheet::save()
         QTextStream out(&file);
         QString textData;
 
-        // Get the count of rows and columns in the dataset
         int rows = myParser.getRowCount();
         int columns = myParser.getColumnCount();
 
-        // Reverse parsing to save to file
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < columns; j++) {
 
@@ -881,6 +850,3 @@ void SpreadSheet::save()
         out << textData;
     }
 }
-
-
-
