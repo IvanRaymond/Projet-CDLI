@@ -140,7 +140,7 @@ void SpreadSheet::createActions()
     clearAction->setShortcut(Qt::Key_Delete);
     connect(clearAction, &QAction::triggered, this, &SpreadSheet::clear);
 
-    aboutSpreadSheet = new QAction(tr("About Spreadsheet"), this);
+    aboutSpreadSheet = new QAction(tr("Repair data"), this);
     connect(aboutSpreadSheet, &QAction::triggered, this, &SpreadSheet::showAbout);
 
     exitAction = new QAction(tr("E&xit"), this);
@@ -182,7 +182,7 @@ void SpreadSheet::setupMenuBar()
 
     menuBar()->addSeparator();
 
-    QMenu *aboutMenu = menuBar()->addMenu(tr("&Help"));
+    QMenu *aboutMenu = menuBar()->addMenu(tr("&Preprocessing"));
     aboutMenu->addAction(aboutSpreadSheet);
 }
 
@@ -464,8 +464,8 @@ void SpreadSheet::actionMath_helper2(const QString &title, Operation &operation)
     cell1ColInput.addItems(cols);
 
     QLabel radio1label("Act on", &group);
-    QRadioButton radio1 (tr("&Rows"),&group);
-    QRadioButton radio2 (tr("&Columns"),&group);
+    QRadioButton radio1 (tr("&Columns"),&group);
+    QRadioButton radio2 (tr("&Rows"),&group);
 
     radio2.setChecked(true);
 
@@ -586,7 +586,55 @@ const char *htmlText =
 
 void SpreadSheet::showAbout()
 {
-    QMessageBox::about(this, "About Spreadsheet", htmlText);
+    QDialog addDialog(this);
+    addDialog.setWindowTitle("Data Repair Center");
+
+    QGroupBox group("Let's do some wizarding", &addDialog);
+    group.setMinimumSize(250, 100);
+
+    QLabel radio1label("Choose your magic spell", &group);
+    QRadioButton radio1 (tr("&Median"),&group);
+    QRadioButton radio2 (tr("M&ean"),&group);
+
+    radio1.setChecked(true);
+   
+    QPushButton cancelButton(tr("Cancel"), &addDialog);
+    connect(&cancelButton, &QAbstractButton::clicked, &addDialog, &QDialog::reject);
+
+    QPushButton okButton(tr("OK"), &addDialog);
+    okButton.setDefault(true);
+    connect(&okButton, &QAbstractButton::clicked, &addDialog, &QDialog::accept);
+    
+    QHBoxLayout *buttonsLayout = new QHBoxLayout;
+    buttonsLayout->addStretch(1);
+    buttonsLayout->addWidget(&okButton);
+    buttonsLayout->addSpacing(10);
+    buttonsLayout->addWidget(&cancelButton);
+
+    QVBoxLayout *dialogLayout = new QVBoxLayout(&addDialog);
+    dialogLayout->addWidget(&group);
+    dialogLayout->addStretch(1);
+    dialogLayout->addItem(buttonsLayout);
+
+    QHBoxLayout *radio1Layout = new QHBoxLayout;
+    radio1Layout->addWidget(&radio1label);
+    radio1Layout->addSpacing(10);
+    radio1Layout->addWidget(&radio1);
+    radio1Layout->addSpacing(10);
+    radio1Layout->addWidget(&radio2);
+    
+    QVBoxLayout *vLayout = new QVBoxLayout(&group);
+    vLayout->addItem(radio1Layout);
+    vLayout->addStretch(1);
+
+
+    if (addDialog.exec()) {
+        Median median;
+        DataPreprocessor::SimpleImputer imputer(median);
+        /*QMessageBox msgBox;
+        msgBox.setText("lk");
+        msgBox.exec();*/
+    }
 }
 
 void decode_pos(const QString &pos, int *row, int *col)
@@ -609,7 +657,6 @@ QString encode_pos(int row, int col)
 
 void SpreadSheet::print()
 {
-    std::cout << "truc ";
 #if defined(QT_PRINTSUPPORT_LIB) && QT_CONFIG(printpreviewdialog)
     QPrinter printer(QPrinter::ScreenResolution);
     QPrintPreviewDialog dlg(&printer);
