@@ -48,21 +48,25 @@
 **
 ****************************************************************************/
 
-#include "spreadsheet.h"
+#ifndef PRINTVIEW_H
+#define PRINTVIEW_H
 
-#include <QApplication>
-#include <QLayout>
+#include <QTableView>
+QT_BEGIN_NAMESPACE
+class QPrinter;
+QT_END_NAMESPACE
 
-int main(int argc, char **argv)
+class PrintView : public QTableView
 {
-    Q_INIT_RESOURCE(spreadsheet);
+    Q_OBJECT
 
-    QApplication app(argc, argv);
-    SpreadSheet sheet(1000, 100);
-    sheet.setWindowIcon(QPixmap(":/images/interview.png"));
-    sheet.show();
-//    sheet.layout()->setSizeConstraint(QLayout::SetFixedSize);
-    return app.exec();
-}
+public:
+    PrintView();
+
+public Q_SLOTS:
+    void print(QPrinter *printer);
+};
+
+#endif // PRINTVIEW_H
 
 

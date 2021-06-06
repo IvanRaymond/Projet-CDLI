@@ -48,21 +48,29 @@
 **
 ****************************************************************************/
 
-#include "spreadsheet.h"
+#include "printview.h"
 
-#include <QApplication>
-#include <QLayout>
+#if defined(QT_PRINTSUPPORT_LIB)
+#  include <QtPrintSupport/qtprintsupportglobal.h>
 
-int main(int argc, char **argv)
+#  if QT_CONFIG(printer)
+#    include <QPrinter>
+#  endif
+#endif
+
+PrintView::PrintView()
 {
-    Q_INIT_RESOURCE(spreadsheet);
-
-    QApplication app(argc, argv);
-    SpreadSheet sheet(1000, 100);
-    sheet.setWindowIcon(QPixmap(":/images/interview.png"));
-    sheet.show();
-//    sheet.layout()->setSizeConstraint(QLayout::SetFixedSize);
-    return app.exec();
+    setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 }
 
+void PrintView::print(QPrinter *printer)
+{
+#if defined(QT_PRINTSUPPORT_LIB) && QT_CONFIG(printer)
+    resize(printer->width(), printer->height());
+    render(printer);
+#else
+    Q_UNUSED(printer);
+#endif
+}
 

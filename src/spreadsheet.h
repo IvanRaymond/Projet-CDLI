@@ -48,21 +48,95 @@
 **
 ****************************************************************************/
 
-#include "spreadsheet.h"
+#ifndef SPREADSHEET_H
+#define SPREADSHEET_H
 
-#include <QApplication>
-#include <QLayout>
+#include <QMainWindow>
+#include "parser.h"
 
-int main(int argc, char **argv)
+QT_BEGIN_NAMESPACE
+class QAction;
+class QLabel;
+class QLineEdit;
+class QToolBar;
+class QTableWidgetItem;
+class QTableWidget;
+QT_END_NAMESPACE
+
+class SpreadSheet : public QMainWindow
 {
-    Q_INIT_RESOURCE(spreadsheet);
+    Q_OBJECT
+public:
+    SpreadSheet(int rows, int cols, QWidget *parent = nullptr);
 
-    QApplication app(argc, argv);
-    SpreadSheet sheet(1000, 100);
-    sheet.setWindowIcon(QPixmap(":/images/interview.png"));
-    sheet.show();
-//    sheet.layout()->setSizeConstraint(QLayout::SetFixedSize);
-    return app.exec();
-}
+public slots:
+    void updateStatus(QTableWidgetItem *item);
+    void updateColor(QTableWidgetItem *item);
+    void updateLineEdit(QTableWidgetItem *item);
+    void returnPressed();
+    void selectColor();
+    void selectFont();
+    void clear();
+    void showAbout();
 
+    void print();
+    void save();
+    void open();
+    vector<vector<string>> convertTable();
+    vector<vector<string>> convertRange(QString range);
+
+    void actionSum();
+    void actionSubtract();
+    void actionAdd();
+    void actionMultiply();
+    void actionDivide();
+
+protected:
+    void setupContextMenu();
+    void setupContents();
+
+    void setupMenuBar();
+    void createActions();
+
+    void actionMath_helper(const QString &title, const QString &op);
+    bool runInputDialog(const QString &title,
+                        const QString &c1Text,
+                        const QString &c2Text,
+                        const QString &opText,
+                        const QString &outText,
+                        QString *cell1, QString *cell2, QString *outCell);
+private:
+    QToolBar *toolBar;
+    QAction *colorAction;
+    QAction *fontAction;
+    QAction *firstSeparator;
+    QAction *cell_sumAction;
+    QAction *cell_addAction;
+    QAction *cell_subAction;
+    QAction *cell_mulAction;
+    QAction *cell_divAction;
+    QAction *secondSeparator;
+    QAction *clearAction;
+    QAction *aboutSpreadSheet;
+    QAction *exitAction;
+
+    QAction *printAction;
+    QAction *openAction;
+    QAction *saveAction;
+
+    QLabel *cellLabel;
+    QTableWidget *table;
+    QLineEdit *formulaInput;
+
+};
+
+void decode_pos(const QString &pos, int *row, int *col);
+QString encode_pos(int row, int col);
+QVector<QVector<QString>> convertStdVect(vector<vector<string>> data);
+vector<vector<string>> convertQVect(QVector<QVector<QString>> data);
+vector<vector<string>> getRow(vector<vector<string>> data, int row);
+vector<vector<string>> getColumn(vector<vector<string>> data, int column);
+
+
+#endif // SPREADSHEET_H
 

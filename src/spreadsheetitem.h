@@ -48,21 +48,36 @@
 **
 ****************************************************************************/
 
+#ifndef SPREADSHEETITEM_H
+#define SPREADSHEETITEM_H
+
 #include "spreadsheet.h"
 
-#include <QApplication>
-#include <QLayout>
+#include <QTableWidgetItem>
 
-int main(int argc, char **argv)
+class SpreadSheetItem : public QTableWidgetItem
 {
-    Q_INIT_RESOURCE(spreadsheet);
+public:
+    using QTableWidgetItem::QTableWidgetItem;
 
-    QApplication app(argc, argv);
-    SpreadSheet sheet(1000, 100);
-    sheet.setWindowIcon(QPixmap(":/images/interview.png"));
-    sheet.show();
-//    sheet.layout()->setSizeConstraint(QLayout::SetFixedSize);
-    return app.exec();
-}
+    QTableWidgetItem *clone() const override;
 
+    QVariant data(int role) const override;
+    void setData(int role, const QVariant &value) override;
+    QVariant display() const;
+
+    inline QString formula() const
+    {
+        return QTableWidgetItem::data(Qt::DisplayRole).toString();
+    }
+
+    static QVariant computeFormula(const QString &formula,
+                                   const QTableWidget *widget,
+                                   const QTableWidgetItem *self = nullptr);
+
+private:
+    mutable bool isResolving = false;
+};
+
+#endif // SPREADSHEETITEM_H
 

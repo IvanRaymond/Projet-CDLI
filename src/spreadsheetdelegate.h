@@ -48,21 +48,26 @@
 **
 ****************************************************************************/
 
-#include "spreadsheet.h"
+#ifndef SPREADSHEETDELEGATE_H
+#define SPREADSHEETDELEGATE_H
 
-#include <QApplication>
-#include <QLayout>
+#include <QStyledItemDelegate>
 
-int main(int argc, char **argv)
+class SpreadSheetDelegate : public QStyledItemDelegate
 {
-    Q_INIT_RESOURCE(spreadsheet);
+    Q_OBJECT
 
-    QApplication app(argc, argv);
-    SpreadSheet sheet(1000, 100);
-    sheet.setWindowIcon(QPixmap(":/images/interview.png"));
-    sheet.show();
-//    sheet.layout()->setSizeConstraint(QLayout::SetFixedSize);
-    return app.exec();
-}
+public:
+    SpreadSheetDelegate(QObject *parent = nullptr);
+    QWidget *createEditor(QWidget *parent, const QStyleOptionViewItem &,
+                          const QModelIndex &index) const override;
+    void setEditorData(QWidget *editor, const QModelIndex &index) const override;
+    void setModelData(QWidget *editor, QAbstractItemModel *model,
+                      const QModelIndex &index) const override;
 
+private slots:
+    void commitAndCloseEditor();
+};
+
+#endif // SPREADSHEETDELEGATE_H
 
