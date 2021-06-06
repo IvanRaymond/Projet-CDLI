@@ -7,42 +7,42 @@
 * [Technologies](#technologies)
 * [Setup](#setup)
 
-##General info
+## General info
 This project is a CSV manipulation program.
 
-##Features
+## Features
 * Opening CSV
 * Modifying the CSV
 * Saving the CSV
 * Calculations on CSV
 * Data preprocessing of CSV
 
-##Classes
+## Classes
 
-####Parser
+#### Parser
 The parser class contains the methods to parse the CSV file into a vector of vectors. Each vectors contains a column.
 
-####DataPreprocessor
+#### DataPreprocessor
 Inspired by Python SimpleImputer. Replaces numerical missing values by a replacement strategy. The replacement strategy is in the ImputerStrategy class.
 
-####ImputerStrategy
+#### ImputerStrategy
 Interface giving the blueprint to implement replacement strategies into the DataPreprocessor.
 
-####Operation
+#### Operation
 Class containing csv calculations on rows and columns.
 
-###CSV Operations Available(on Rows or Columns)
+### CSV Operations Available(on Rows or Columns)
 * Sum
 * Average
 * Median
 * Max
 
-##Technologies
+## Technologies
 Project is created with:
 * Qt version: 6.0.3
 * C++
 
-##Setup :
+## Setup :
 
 To run this project, compile it using qmake:
 
