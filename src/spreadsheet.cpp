@@ -623,11 +623,11 @@ vector<vector<string>> getRow(vector<vector<string>> data, int row)
     return result;
 }
 
-vector<vector<string>> getColumn(vector<vector<string>> data, int column)
+vector<vector<string>> getColumn(vector<vector<string>> data, int col)
 {
     vector<vector<string>> result;
 
-    result.push_back(data[column]);
+    result.push_back(data[col]);
 
     return result;
 }

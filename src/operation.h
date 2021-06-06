@@ -6,7 +6,7 @@
 #include <exception>
 
 #define matrix vector<vector<string>>
-#define column vector<string>
+#define dataColumn vector<string>
 
 struct OperationError : public std::exception {
     const char * what () const throw ()

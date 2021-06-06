@@ -24,7 +24,7 @@ CalculateSum::~CalculateSum(){}
  */
 string CalculateSum::calculate(matrix X){
 
-    column col;
+    dataColumn col;
     double sum;
 
     // Column case
@@ -52,7 +52,7 @@ CalculateAverage::~CalculateAverage(){}
 
 string CalculateAverage::calculate(matrix X){
 
-    column col;
+    dataColumn col;
     double average, sum;
     CalculateSum calSum;
 
@@ -93,7 +93,7 @@ CalculateMax::~CalculateMax(){}
  */
 string CalculateMax::calculate(matrix X){
 
-    column col;
+    dataColumn col;
     vector<double> colInt;
     double newMax, max;
     // Initialising max as minimum value possible

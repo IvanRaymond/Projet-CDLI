@@ -136,7 +136,7 @@ QString encode_pos(int row, int col);
 QVector<QVector<QString>> convertStdVect(vector<vector<string>> data);
 vector<vector<string>> convertQVect(QVector<QVector<QString>> data);
 vector<vector<string>> getRow(vector<vector<string>> data, int row);
-vector<vector<string>> getColumn(vector<vector<string>> data, int column);
+vector<vector<string>> getColumn(vector<vector<string>> data, int col);
 
 
 #endif // SPREADSHEET_H
