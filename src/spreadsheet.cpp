@@ -448,7 +448,7 @@ void SpreadSheet::actionMath_helper2(const QString &title, Operation &operation)
     QStringList rows, cols;
     for (int c = 0; c < table->columnCount(); ++c)
         cols << QChar('A' + c);
-    for (int r = 0; r < table->rowCount(); ++r)
+    for (int r = 1; r < table->rowCount(); ++r)
         rows << QString::number(1 + r);
 
     QDialog addDialog(this);
@@ -516,7 +516,6 @@ void SpreadSheet::actionMath_helper2(const QString &title, Operation &operation)
             convertedRange = convertRange(cell1RowInput.currentText());
         msgBox.setText(executeOperation(convertedRange, operation));
         msgBox.exec();
-
     }
 }
 
@@ -569,21 +568,6 @@ void SpreadSheet::setupContents()
 {
 
 }
-
-const char *htmlText =
-"<HTML>"
-"<p><b>This demo shows use of <c>QTableWidget</c> with custom handling for"
-" individual cells.</b></p>"
-"<p>Using a customized table item we make it possible to have dynamic"
-" output in different cells. The content that is implemented for this"
-" particular demo is:"
-"<ul>"
-"<li>Adding two cells.</li>"
-"<li>Subtracting one cell from another.</li>"
-"<li>Multiplying two cells.</li>"
-"<li>Dividing one cell with another.</li>"
-"<li>Summing the contents of an arbitrary number of cells.</li>"
-"</HTML>";
 
 void SpreadSheet::showAbout()
 {
@@ -643,8 +627,6 @@ void SpreadSheet::showAbout()
             data = imputer.transform(data);
         }
         QVector<QVector<QString>> qData = convertStdVect(data);
-        // Clear the table
-        table->clear();
         for (int i = 0; i < data.size(); ++i)
             for (int j = 0; j < data[0].size(); ++j) {
                 table->setItem(j, i, new SpreadSheetItem(qData[i][j]));
@@ -810,9 +792,6 @@ void SpreadSheet::open()
 
     QVector<QVector<QString>> data = convertStdVect(myParser.getData());
 
-    // clear the table
-    table->clear();
-
     for (int i = 0; i < data.size(); ++i)
         for (int j = 0; j < data[0].size(); ++j) {
             table->setItem(j, i, new SpreadSheetItem(data[i][j]));
@@ -848,12 +827,13 @@ void SpreadSheet::save()
             for (int j = 0; j < columns; j++) {
 
                 textData += table->item(i,j)->text();
-                if (j<columns-1){
-                    textData += ";";    // for .csv file format
-                }
+                textData += ";";    // for .csv file format
             }
             textData += "\n";             // (optional: for new line segmentation)
         }
         out << textData;
     }
 }
+
+
+
