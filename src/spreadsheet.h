@@ -53,6 +53,7 @@
 
 #include <QMainWindow>
 #include "parser.h"
+#include "operation.h"
 
 QT_BEGIN_NAMESPACE
 class QAction;
