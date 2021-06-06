@@ -635,6 +635,7 @@ void SpreadSheet::showAbout()
             data = imputer.transform(data);
         }
         QVector<QVector<QString>> qData = convertStdVect(data);
+        table->clear();
         for (int i = 0; i < data.size(); ++i)
             for (int j = 0; j < data[0].size(); ++j) {
                 table->setItem(j, i, new SpreadSheetItem(qData[i][j]));
