@@ -435,6 +435,14 @@ void SpreadSheet::actionSum()
     }
 }
 
+QString executeOperation(matrix range, Operation &operation)
+{
+    QString result;
+    result = QString::fromStdString(operation.calculate(range));
+    return result;
+}
+
+
 void SpreadSheet::actionMath_helper(const QString &title, const QString &op)
 {
     const QTableWidgetItem *current = table->currentItem();
@@ -504,9 +512,9 @@ void SpreadSheet::actionMath_helper(const QString &title, const QString &op)
         QMessageBox msgBox;
 
         matrix convertedRange = convertRange(cell1ColInput.currentText());
-        result = QString::fromStdString(sum.calculate(convertedRange));
 
-        msgBox.setText(result);
+
+        msgBox.setText(executeOperation(convertedRange, sum));
         msgBox.exec();
 
     }
