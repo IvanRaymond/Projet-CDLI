@@ -827,7 +827,9 @@ void SpreadSheet::save()
             for (int j = 0; j < columns; j++) {
 
                 textData += table->item(i,j)->text();
-                textData += ";";    // for .csv file format
+                if(j<columns-1){
+                    textData += ";";    // for .csv file format
+                }
             }
             textData += "\n";             // new line segmentation
         }
