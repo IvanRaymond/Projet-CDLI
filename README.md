@@ -28,6 +28,10 @@ Inspired by Python SimpleImputer. Replaces numerical missing values by a replace
 #### ImputerStrategy
 Interface giving the blueprint to implement replacement strategies into the DataPreprocessor.
 
+Strategies Available : 
+* Mean
+* Median
+
 #### Operation
 Class containing csv calculations on rows and columns.
 
