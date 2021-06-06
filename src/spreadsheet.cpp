@@ -643,6 +643,8 @@ void SpreadSheet::showAbout()
             data = imputer.transform(data);
         }
         QVector<QVector<QString>> qData = convertStdVect(data);
+        // Clear the table
+        table->clear();
         for (int i = 0; i < data.size(); ++i)
             for (int j = 0; j < data[0].size(); ++j) {
                 table->setItem(j, i, new SpreadSheetItem(qData[i][j]));
@@ -808,6 +810,9 @@ void SpreadSheet::open()
 
     QVector<QVector<QString>> data = convertStdVect(myParser.getData());
 
+    // clear the table
+    table->clear();
+
     for (int i = 0; i < data.size(); ++i)
         for (int j = 0; j < data[0].size(); ++j) {
             table->setItem(j, i, new SpreadSheetItem(data[i][j]));
@@ -843,7 +848,9 @@ void SpreadSheet::save()
             for (int j = 0; j < columns; j++) {
 
                 textData += table->item(i,j)->text();
-                textData += ";";    // for .csv file format
+                if (j<columns-1){
+                    textData += ";";    // for .csv file format
+                }
             }
             textData += "\n";             // (optional: for new line segmentation)
         }
