@@ -841,6 +841,7 @@ void SpreadSheet::open()
     if(!fileName.isEmpty()&& !fileName.isNull()){
         myParser.parse(fileName.toStdString());
         QVector<QVector<QString>> data = convertStdVect(myParser.getData());
+        table->clear();
         for (int i = 0; i < data.size(); ++i)
             for (int j = 0; j < data[0].size(); ++j) {
                 table->setItem(j, i, new SpreadSheetItem(data[i][j]));
