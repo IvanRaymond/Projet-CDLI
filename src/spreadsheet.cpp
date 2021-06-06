@@ -838,19 +838,15 @@ void SpreadSheet::open()
     QString fileName = QFileDialog::getOpenFileName(this,
         tr("Open CSV file"), "",
         tr("Your favorite CSV file (.csv) (*.csv);;All Files (*)"));
-
-    myParser.parse(fileName.toStdString());
-
-    // Convert vector into QVector
-    QVector<QVector<QString>> data = convertStdVect(myParser.getData());
-
-    table->clear();
-
-    // Fill the spreadsheet
-    for (int i = 0; i < data.size(); ++i)
-        for (int j = 0; j < data[0].size(); ++j) {
-            table->setItem(j, i, new SpreadSheetItem(data[i][j]));
-        }
+    if(!fileName.isEmpty()&& !fileName.isNull()){
+        myParser.parse(fileName.toStdString());
+        QVector<QVector<QString>> data = convertStdVect(myParser.getData());
+        for (int i = 0; i < data.size(); ++i)
+            for (int j = 0; j < data[0].size(); ++j) {
+                table->setItem(j, i, new SpreadSheetItem(data[i][j]));
+            }
+        fileOpened = true;
+    }    
     return;
 }
 
