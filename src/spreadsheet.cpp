@@ -66,6 +66,8 @@
 #include <QDebug>
 #endif
 
+bool fileOpened = false;
+
 SpreadSheet::SpreadSheet(int rows, int cols, QWidget *parent)
     : QMainWindow(parent),
       toolBar(new QToolBar(this)),
@@ -223,6 +225,16 @@ void SpreadSheet::updateColor(QTableWidgetItem *item)
     pt.end();
 
     colorAction->setIcon(pix);
+}
+
+bool SpreadSheet::fileOpenSafety() {
+    if(!fileOpened){
+        QMessageBox msgBox;
+        msgBox.setText("My dear user,\n\nWe are concerned that you are trying to modify a file that has not yet been opened which contradicts this software integrity. It is therefore with our profond apologies that we print you this error message.\n\nLove, the dev team.");
+        msgBox.exec();
+        return false;
+    }
+    return true;
 }
 
 void SpreadSheet::updateLineEdit(QTableWidgetItem *item)
@@ -449,78 +461,80 @@ QString executeOperation(matrix range, Operation &operation)
 
 void SpreadSheet::actionMath_helper2(const QString &title, Operation &operation)
 {
-    const QTableWidgetItem *current = table->currentItem();
-    QStringList rows, cols;
-    for (int c = 0; c < table->columnCount(); ++c)
-        cols << QChar('A' + c);
-    for (int r = 1; r < table->rowCount(); ++r)
-        rows << QString::number(1 + r);
+    if(fileOpenSafety()) {
+        const QTableWidgetItem *current = table->currentItem();
+        QStringList rows, cols;
+        for (int c = 0; c < table->columnCount(); ++c)
+            cols << QChar('A' + c);
+        for (int r = 1; r < table->rowCount(); ++r)
+            rows << QString::number(1 + r);
 
-    QDialog addDialog(this);
-    addDialog.setWindowTitle(title);
+        QDialog addDialog(this);
+        addDialog.setWindowTitle(title);
 
-    QGroupBox group(title, &addDialog);
-    group.setMinimumSize(250, 100);
-    
-    QComboBox cell1RowInput(&group);
-    cell1RowInput.addItems(rows);
+        QGroupBox group(title, &addDialog);
+        group.setMinimumSize(250, 100);
 
-    QComboBox cell1ColInput(&group);
-    cell1ColInput.addItems(cols);
+        QComboBox cell1RowInput(&group);
+        cell1RowInput.addItems(rows);
 
-    QLabel radio1label("Act on", &group);
-    QRadioButton radio1 (tr("&Columns"),&group);
-    QRadioButton radio2 (tr("&Rows"),&group);
+        QComboBox cell1ColInput(&group);
+        cell1ColInput.addItems(cols);
 
-    radio1.setChecked(true);
+        QLabel radio1label("Act on", &group);
+        QRadioButton radio1 (tr("&Columns"),&group);
+        QRadioButton radio2 (tr("&Rows"),&group);
 
-    QPushButton cancelButton(tr("Cancel"), &addDialog);
-    connect(&cancelButton, &QAbstractButton::clicked, &addDialog, &QDialog::reject);
+        radio1.setChecked(true);
 
-    QPushButton okButton(tr("OK"), &addDialog);
-    okButton.setDefault(true);
-    connect(&okButton, &QAbstractButton::clicked, &addDialog, &QDialog::accept);
+        QPushButton cancelButton(tr("Cancel"), &addDialog);
+        connect(&cancelButton, &QAbstractButton::clicked, &addDialog, &QDialog::reject);
 
-    QHBoxLayout *buttonsLayout = new QHBoxLayout;
-    buttonsLayout->addStretch(1);
-    buttonsLayout->addWidget(&okButton);
-    buttonsLayout->addSpacing(10);
-    buttonsLayout->addWidget(&cancelButton);
+        QPushButton okButton(tr("OK"), &addDialog);
+        okButton.setDefault(true);
+        connect(&okButton, &QAbstractButton::clicked, &addDialog, &QDialog::accept);
 
-    QVBoxLayout *dialogLayout = new QVBoxLayout(&addDialog);
-    dialogLayout->addWidget(&group);
-    dialogLayout->addStretch(1);
-    dialogLayout->addItem(buttonsLayout);
+        QHBoxLayout *buttonsLayout = new QHBoxLayout;
+        buttonsLayout->addStretch(1);
+        buttonsLayout->addWidget(&okButton);
+        buttonsLayout->addSpacing(10);
+        buttonsLayout->addWidget(&cancelButton);
 
-    QHBoxLayout *cell1Layout = new QHBoxLayout;
-    cell1Layout->addSpacing(10);
-    cell1Layout->addWidget(&cell1ColInput);
-    cell1Layout->addSpacing(10);
-    cell1Layout->addWidget(&cell1RowInput);
+        QVBoxLayout *dialogLayout = new QVBoxLayout(&addDialog);
+        dialogLayout->addWidget(&group);
+        dialogLayout->addStretch(1);
+        dialogLayout->addItem(buttonsLayout);
 
-    QHBoxLayout *radio1Layout = new QHBoxLayout;
-    radio1Layout->addWidget(&radio1label);
-    radio1Layout->addSpacing(10);
-    radio1Layout->addWidget(&radio1);
-    radio1Layout->addSpacing(10);
-    radio1Layout->addWidget(&radio2);
-    
-    QVBoxLayout *vLayout = new QVBoxLayout(&group);
-    vLayout->addItem(cell1Layout);
-    vLayout->addItem(radio1Layout);
-    vLayout->addStretch(1);
-    
-    if (addDialog.exec()) {
-        CalculateSum sum;
-        QString result;
-        QMessageBox msgBox;
-        matrix convertedRange;
-        if(radio1.isChecked())
-            convertedRange = convertRange(cell1ColInput.currentText());
-        else
-            convertedRange = convertRange(cell1RowInput.currentText());
-        msgBox.setText(executeOperation(convertedRange, operation));
-        msgBox.exec();
+        QHBoxLayout *cell1Layout = new QHBoxLayout;
+        cell1Layout->addSpacing(10);
+        cell1Layout->addWidget(&cell1ColInput);
+        cell1Layout->addSpacing(10);
+        cell1Layout->addWidget(&cell1RowInput);
+
+        QHBoxLayout *radio1Layout = new QHBoxLayout;
+        radio1Layout->addWidget(&radio1label);
+        radio1Layout->addSpacing(10);
+        radio1Layout->addWidget(&radio1);
+        radio1Layout->addSpacing(10);
+        radio1Layout->addWidget(&radio2);
+
+        QVBoxLayout *vLayout = new QVBoxLayout(&group);
+        vLayout->addItem(cell1Layout);
+        vLayout->addItem(radio1Layout);
+        vLayout->addStretch(1);
+
+        if (addDialog.exec()) {
+            CalculateSum sum;
+            QString result;
+            QMessageBox msgBox;
+            matrix convertedRange;
+            if(radio1.isChecked())
+                convertedRange = convertRange(cell1ColInput.currentText());
+            else
+                convertedRange = convertRange(cell1RowInput.currentText());
+            msgBox.setText(executeOperation(convertedRange, operation));
+            msgBox.exec();
+        }
     }
 }
 
@@ -579,70 +593,72 @@ void SpreadSheet::setupContents()
  */
 void SpreadSheet::showAbout()
 {
-    QDialog addDialog(this);
-    addDialog.setWindowTitle("Data Repair Center");
+    if(fileOpenSafety()) {
+        QDialog addDialog(this);
+        addDialog.setWindowTitle("Data Repair Center");
 
-    QGroupBox group("Let's do some wizarding", &addDialog);
-    group.setMinimumSize(250, 100);
+        QGroupBox group("Let's do some wizarding", &addDialog);
+        group.setMinimumSize(250, 100);
 
-    QLabel radio1label("Choose your magic spell", &group);
-    QRadioButton radio3 (tr("&Median"),&group);
-    QRadioButton radio4 (tr("M&ean"),&group);
+        QLabel radio1label("Choose your magic spell", &group);
+        QRadioButton radio3 (tr("&Median"),&group);
+        QRadioButton radio4 (tr("M&ean"),&group);
 
-    radio3.setChecked(true);
-   
-    QPushButton cancelButton(tr("Cancel"), &addDialog);
-    connect(&cancelButton, &QAbstractButton::clicked, &addDialog, &QDialog::reject);
+        radio3.setChecked(true);
 
-    QPushButton okButton(tr("OK"), &addDialog);
-    okButton.setDefault(true);
-    connect(&okButton, &QAbstractButton::clicked, &addDialog, &QDialog::accept);
-    
-    QHBoxLayout *buttonsLayout = new QHBoxLayout;
-    buttonsLayout->addStretch(1);
-    buttonsLayout->addWidget(&okButton);
-    buttonsLayout->addSpacing(10);
-    buttonsLayout->addWidget(&cancelButton);
+        QPushButton cancelButton(tr("Cancel"), &addDialog);
+        connect(&cancelButton, &QAbstractButton::clicked, &addDialog, &QDialog::reject);
 
-    QVBoxLayout *dialogLayout = new QVBoxLayout(&addDialog);
-    dialogLayout->addWidget(&group);
-    dialogLayout->addStretch(1);
-    dialogLayout->addItem(buttonsLayout);
+        QPushButton okButton(tr("OK"), &addDialog);
+        okButton.setDefault(true);
+        connect(&okButton, &QAbstractButton::clicked, &addDialog, &QDialog::accept);
 
-    QHBoxLayout *radio2Layout = new QHBoxLayout;
-    radio2Layout->addWidget(&radio1label);
-    radio2Layout->addSpacing(10);
-    radio2Layout->addWidget(&radio3);
-    radio2Layout->addSpacing(10);
-    radio2Layout->addWidget(&radio4);
-    
-    QVBoxLayout *vLayout = new QVBoxLayout(&group);
-    vLayout->addItem(radio2Layout);
-    vLayout->addStretch(1);
+        QHBoxLayout *buttonsLayout = new QHBoxLayout;
+        buttonsLayout->addStretch(1);
+        buttonsLayout->addWidget(&okButton);
+        buttonsLayout->addSpacing(10);
+        buttonsLayout->addWidget(&cancelButton);
+
+        QVBoxLayout *dialogLayout = new QVBoxLayout(&addDialog);
+        dialogLayout->addWidget(&group);
+        dialogLayout->addStretch(1);
+        dialogLayout->addItem(buttonsLayout);
+
+        QHBoxLayout *radio2Layout = new QHBoxLayout;
+        radio2Layout->addWidget(&radio1label);
+        radio2Layout->addSpacing(10);
+        radio2Layout->addWidget(&radio3);
+        radio2Layout->addSpacing(10);
+        radio2Layout->addWidget(&radio4);
+
+        QVBoxLayout *vLayout = new QVBoxLayout(&group);
+        vLayout->addItem(radio2Layout);
+        vLayout->addStretch(1);
 
 
-    if (addDialog.exec()) {
-        vector<vector<string>> data;
-        data = convertTable(table, 0);
-        if(radio3.isChecked())
-        {
-            ImputerMedian method;
-            DataPreprocessor::SimpleImputer imputer(method);
-            data = imputer.transform(data);
-        }else{
-            ImputerMean method;
-            DataPreprocessor::SimpleImputer imputer(method);
-            data = imputer.transform(data);
-        }
-        QVector<QVector<QString>> qData = convertStdVect(data);
-        table->clear();
-        for (int i = 0; i < data.size(); ++i)
-            for (int j = 0; j < data[0].size(); ++j) {
-                table->setItem(j, i, new SpreadSheetItem(qData[i][j]));
+        if (addDialog.exec()) {
+            vector<vector<string>> data;
+            data = convertTable(table, 0);
+            if(radio3.isChecked())
+            {
+                ImputerMedian method;
+                DataPreprocessor::SimpleImputer imputer(method);
+                data = imputer.transform(data);
+            }else{
+                ImputerMean method;
+                DataPreprocessor::SimpleImputer imputer(method);
+                data = imputer.transform(data);
             }
-        QMessageBox msgBox;
-        msgBox.setText("Yer a Wizard, Harry!");
-        msgBox.exec();
+            QVector<QVector<QString>> qData = convertStdVect(data);
+            table->clear();
+            for (int i = 0; i < data.size(); ++i)
+                for (int j = 0; j < data[0].size(); ++j) {
+                    table->setItem(j, i, new SpreadSheetItem(qData[i][j]));
+                }
+            QMessageBox msgBox;
+            msgBox.setText("Yer a Wizard, Harry!");
+            msgBox.exec();
+        }
     }
 }
 
