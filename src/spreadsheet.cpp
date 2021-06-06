@@ -455,7 +455,14 @@ void SpreadSheet::actionSum()
 QString executeOperation(matrix range, Operation &operation)
 {
     QString result;
-    result = QString::fromStdString(operation.calculate(range));
+    try { 
+        result = QString::fromStdString(operation.calculate(range));
+    } catch (const std::exception& e) { 
+        QMessageBox msgBox;
+        msgBox.setText("I'm sorry Dave, I'm afraid I can't do that");
+        msgBox.exec();
+    }
+    
     return result;
 }
 
