@@ -86,6 +86,8 @@ public slots:
     void save();
     void open();
 
+    bool fileOpenSafety(); 
+
     vector<vector<string>> convertRange(QString range);
 
     void actionSum();
