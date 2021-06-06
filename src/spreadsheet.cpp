@@ -627,12 +627,15 @@ void SpreadSheet::showAbout()
 
     if (addDialog.exec()) {
         vector<vector<string>> data;
-        data = convertTable(table);
+        data = convertTable(table, 0);
         ImputerMedian median;
         DataPreprocessor::SimpleImputer imputer(median);
+        data = imputer.transform(data);
+        QVector<QVector<QString>> qData = convertStdVect(data);
+
         for (int i = 0; i < data.size(); ++i)
             for (int j = 0; j < data[0].size(); ++j) {
-                table->setItem(j, i, new SpreadSheetItem(data[i][j]));
+                table->setItem(j, i, new SpreadSheetItem(qData[i][j]));
             }
         QMessageBox msgBox;
         if(radio1.isChecked())
