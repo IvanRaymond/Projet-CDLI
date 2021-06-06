@@ -1,3 +1,11 @@
+/*
+ * ImputerStrategy.cpp
+ *
+ *  Created on: 12 May 2021
+ *      Author: ivan
+ * Description: Interface giving the blueprint to implement replacement strategies into the DataPreprocessor.
+ */
+
 #include "imputerstrategy.h"
 
 #include <iostream>
@@ -10,6 +18,11 @@ using namespace std;
 
 ImputerStrategy::~ImputerStrategy() {}
 
+
+/*
+ *  Mean Strategy
+ *  Replaces missing data with the mean of the column or missing value if non numerical
+ */
 ImputerMean::ImputerMean() {}
 
 ImputerMean::ImputerMean(matrix X){
@@ -62,6 +75,11 @@ matrix ImputerMean::transform(matrix& X) {
     return X;
 }
 
+
+/*
+ *  Median Strategy
+ *  Replaces missing data with the median of the column or missing value if non numerical
+ */
 ImputerMedian::ImputerMedian() {}
 
 ImputerMedian::~ImputerMedian() {}

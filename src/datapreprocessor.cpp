@@ -1,3 +1,12 @@
+/*
+ * DataPreprocessor.cpp
+ *
+ *  Created on: 23 Apr 2021
+ *      Author: ivan
+ * Description: Inspired by python Data preprocessing library. This class implements a simple imputer to replace
+ *              missing values from a dataset. The replacement strategy is implemented in the class ImputerStrategy
+ */
+
 #include "datapreprocessor.h"
 
 #include <iostream>

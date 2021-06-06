@@ -3,6 +3,7 @@
  *
  *  Created on: 22 Apr 2021
  *      Author: ivan
+ * Description: A simple CSV parser that stores the csv into a 2D Vector.
  */
 
 #include "parser.h"
@@ -22,7 +23,10 @@ parser::parser(string fileName)
     parse(fileName);
 }
 
-
+/*
+ * Parsing method
+ * Stores the result in the parameter data of the parser class
+ */
 void parser::parse(string fileName)
 {
     file = fileName;
@@ -71,50 +75,16 @@ void parser::parse(string fileName)
     myFile.close();
 }
 
-void parser::save(QVector<QVector<QString>> X)
-{
-    QFile file("out.txt");
-        if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
-            return;
-
-    QTextStream out(&file);
-
-    QVector<QVector<QString>> vect = X;
-    int colSize = vect[0].size();
-    for (int i = 0; i < colSize; i++)
-    {
-        for (int j = 0; j < vect.size(); j++)
-        {
-            colSize = vect[j].size();
-            out << vect[j][i];
-            if (j < vect.size() - 1) {
-                out << ";";
-            }
-        }
-        out << "\n";
-    }
-}
-
-void parser::print()
-{
-    vector<vector<string>> vect = data;
-    int colSize = vect[0].size();
-    for (int i = 0; i < colSize; i++)
-    {
-        for (int j = 0; j < vect.size(); j++)
-        {
-            colSize = vect[j].size();
-            cout << "| " << vect[j][i] << " |";
-        }
-
-        cout << endl;
-    }
-}
-
+/*
+ * Returns the number of columns in the dataset
+ */
 int parser::getColumnCount(){
     return data.size();
 }
 
+/*
+ * Return the number of rows in the dataset
+ */
 int parser::getRowCount(){
     vector<string> col;
     col = data[0];

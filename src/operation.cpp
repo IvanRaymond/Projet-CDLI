@@ -1,3 +1,11 @@
+/*
+ * Operation.cpp
+ *
+ *  Created on: 25 Apr 2021
+ *      Author: ivan
+ * Description: Interface defining the operations on the dataset.
+ */
+
 #include "operation.h"
 #include "imputerstrategy.h"
 
@@ -13,15 +21,13 @@ using namespace std;
 
 Operation::~Operation() {}
 
-
-CalculateSum::CalculateSum(){}
-CalculateSum::~CalculateSum(){}
-
 /*
  * Calculate the Sum of a Column if a single column is set
  * If multiple columns are set then will calculate the sum
  * of a line.
  */
+CalculateSum::CalculateSum(){}
+CalculateSum::~CalculateSum(){}
 string CalculateSum::calculate(matrix X){
 
     dataColumn col;
@@ -47,9 +53,11 @@ string CalculateSum::calculate(matrix X){
     return to_string(sum);
 }
 
+/*
+ * Calculate Average of a column or a row.
+ */
 CalculateAverage::CalculateAverage(){}
 CalculateAverage::~CalculateAverage(){}
-
 string CalculateAverage::calculate(matrix X){
 
     dataColumn col;
@@ -70,12 +78,11 @@ string CalculateAverage::calculate(matrix X){
     return to_string(average);
 }
 
+/*
+ * Calculate median of a column
+ */
 CalculateMedian::CalculateMedian(){}
 CalculateMedian::~CalculateMedian(){}
-
-/*
- * Operation on row not permitted
- */
 string CalculateMedian::calculate(matrix X){
     // Column case
     if (X.size() < 2) {
@@ -85,12 +92,11 @@ string CalculateMedian::calculate(matrix X){
     }
 }
 
+/*
+ * Calculate the max of a matrix
+ */
 CalculateMax::CalculateMax(){}
 CalculateMax::~CalculateMax(){}
-
-/*
- * Return the max value in a matrix
- */
 string CalculateMax::calculate(matrix X){
 
     dataColumn col;

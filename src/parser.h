@@ -31,9 +31,7 @@ public:
     parser(string fileName);
 
     void parse(string fileName);
-    void save(QVector<QVector<QString>> X);
     void setFile(string fileName);
-    void print();
     void setEncoding(string encoding);
     vector<vector<string>> getData();
     int getColumnCount();
