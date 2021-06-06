@@ -54,6 +54,8 @@
 #include <QMainWindow>
 #include "parser.h"
 #include "operation.h"
+#include "datapreprocessor.h"
+#include "imputerstrategy.h"
 
 QT_BEGIN_NAMESPACE
 class QAction;

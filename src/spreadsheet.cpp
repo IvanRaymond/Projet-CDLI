@@ -629,7 +629,7 @@ void SpreadSheet::showAbout()
 
 
     if (addDialog.exec()) {
-        Median median;
+        ImputerMedian median;
         DataPreprocessor::SimpleImputer imputer(median);
         /*QMessageBox msgBox;
         msgBox.setText("lk");
